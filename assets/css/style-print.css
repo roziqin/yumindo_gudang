@@ -1,0 +1,15 @@
+.box {
+	display: inline-block;
+	width: 100%;
+}
+.box-custom {
+	float: left;
+	display: inline-block;
+	margin-right: 15px;
+}
+
+table th {
+	border-bottom: 1px solid #000;
+	border-top: 1px solid #000;
+	padding-bottom: 5px;
+}
