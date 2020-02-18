@@ -41,7 +41,7 @@ if ($role=="md") {
     }
 
 
-    $query ="SELECT order_keluar_tanggal, order_keluar_bulan, barang_nama, barang_id, sum(order_keluar_jumlah) as jumlah from order_keluar, barang, barang_cabang, kategori, subkategori WHERE order_keluar_barang_id=barang_cabang_id and barang_id=barang_cabang_barang_id and kategori_id=subkategori_parent and subkategori_id=barang_subkategori and barang_cabang_cabang_id='$cabang' and $text1 $ket BETWEEN '$tgl11' AND '$tgl22' GROUP BY $ket $text2 ORDER BY order_keluar_tanggal ASC";
+    $query ="SELECT kategori_nama, subkategori_nama, order_keluar_tanggal, order_keluar_bulan, barang_nama, barang_id, sum(order_keluar_jumlah) as jumlah from order_keluar, barang, barang_cabang, kategori, subkategori WHERE order_keluar_barang_id=barang_cabang_id and barang_id=barang_cabang_barang_id and kategori_id=subkategori_parent and subkategori_id=barang_subkategori and barang_cabang_cabang_id='$cabang' and $text1 $ket BETWEEN '$tgl11' AND '$tgl22' GROUP BY $ket $text2 ORDER BY order_keluar_tanggal ASC";
 
 } elseif ($role=="admin" || $role=="administrator"  || $role=="keuangan") {
     if ($cabangnama=="Pusat") {    
@@ -66,7 +66,7 @@ if ($role=="md") {
             $ket = "orderbarang_bulan";
         }
         
-        $query ="SELECT orderbarang_tanggal, orderbarang_bulan, barang_nama, barang_id, sum(order_detail_jumlah) as jumlah from orderbarang, order_detail, barang, kategori, subkategori WHERE order_detail_barang_id=barang_id and order_detail_no_pesan=orderbarang_no_pesan and kategori_id=subkategori_parent and subkategori_id=barang_subkategori and $text1 $ket BETWEEN '$tgl11' AND '$tgl22' GROUP BY $ket $text2 ORDER BY orderbarang_tanggal ASC";
+        $query ="SELECT kategori_nama, subkategori_nama, orderbarang_tanggal, orderbarang_bulan, barang_nama, barang_id, sum(order_detail_jumlah) as jumlah from orderbarang, order_detail, barang, kategori, subkategori WHERE order_detail_barang_id=barang_id and order_detail_no_pesan=orderbarang_no_pesan and kategori_id=subkategori_parent and subkategori_id=barang_subkategori and $text1 $ket BETWEEN '$tgl11' AND '$tgl22' GROUP BY $ket $text2 ORDER BY orderbarang_tanggal ASC";
     } else {
         if ($kategori!=0 && $subkategori==0 && $menu==0) {
             $text1 = 'kategori_id='.$kategori.' and ';
@@ -90,7 +90,7 @@ if ($role=="md") {
         }
 
 
-        $query ="SELECT order_keluar_tanggal as orderbarang_tanggal, order_keluar_bulan as orderbarang_bulan, barang_nama, barang_id, sum(order_keluar_jumlah) as jumlah from order_keluar, barang, barang_cabang, kategori, subkategori WHERE order_keluar_barang_id=barang_cabang_id and barang_id=barang_cabang_barang_id and kategori_id=subkategori_parent and subkategori_id=barang_subkategori and barang_cabang_cabang_id='$cekcabang' and $text1 $ket BETWEEN '$tgl11' AND '$tgl22' GROUP BY $ket $text2 ORDER BY order_keluar_tanggal ASC";
+        $query ="SELECT kategori_nama, subkategori_nama, order_keluar_tanggal as orderbarang_tanggal, order_keluar_bulan as orderbarang_bulan, barang_nama, barang_id, sum(order_keluar_jumlah) as jumlah from order_keluar, barang, barang_cabang, kategori, subkategori WHERE order_keluar_barang_id=barang_cabang_id and barang_id=barang_cabang_barang_id and kategori_id=subkategori_parent and subkategori_id=barang_subkategori and barang_cabang_cabang_id='$cekcabang' and $text1 $ket BETWEEN '$tgl11' AND '$tgl22' GROUP BY $ket $text2 ORDER BY order_keluar_tanggal ASC";
     }
 
 }
@@ -122,6 +122,8 @@ $html ='
 		<tr>
             <th>tanggal</th>
             <th>item</th>
+            <th>kategori</th>
+            <th>subkategori</th>
             <th style="text-align: center;">jumlah</th>
 		</tr>
 
@@ -137,6 +139,8 @@ while($data = mysqli_fetch_assoc($result)) {
 		<tr>
 			<td>'.$fieldname.'</td>
 			<td>'.$data["barang_nama"].'</td>
+            <td>'.$data["kategori_nama"].'</td>
+            <td>'.$data["subkategori_nama"].'</td>
 			<td style="text-align: center;">'.$data["jumlah"].'</td>
 		</tr>
 
