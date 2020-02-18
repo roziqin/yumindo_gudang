@@ -221,7 +221,7 @@ if ($role=="md") {
 		    },
             "ajax": 
             {
-                "url": "api/datatable.api.php?ket=konfpesanan", // URL file untuk proses select datanya
+                "url": "api/datatable.api.php?ket=konfpesanan-dashboard", // URL file untuk proses select datanya
                 "type": "POST"
             },
             "deferRender": true,

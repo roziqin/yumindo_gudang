@@ -123,22 +123,27 @@ if ($ket=='omset') {
 				    </div>
 				</div>
 			</div>	
-			<div class="row fadeInLeft slow animated">
-					<div class="col-md-12"><h2 class="text-center mb-4">Omset <span id="namacabang"></span></h2></div>
-					<div class="col-md-12">
-						<table id="table-omset" class="table table-striped table-bordered" style="width:100%">
-					        <thead>
-					            <tr>
-		                            <th>tanggal</th>
-		                            <th style="text-align: right;">Omset</th>
-					            </tr>
-					        </thead>
-					    </table>
-					</div>
-					<div class="col-md-12">
-					    <div class="md-form">
-					    	<a class="btn btn-default export-omset hidden" href="" target="_blank">Export</a>
-					    </div>
+			<div class="row fadeInLeft slow animated col-table">
+				<div class="col-md-12"><h2 class="text-center mb-4">Omset <span id="namacabang"></span></h2></div>
+				<div class="col-md-12">
+					<table id="table-omset" class="table table-striped table-bordered" style="width:100%">
+				        <thead>
+				            <tr>
+	                            <th>tanggal</th>
+	                            <th style="text-align: right;">Omset</th>
+				            </tr>
+				        </thead>
+				    </table>
+				</div>
+				<div class="col-md-12">
+				    <div class="md-form">
+				    	<a class="btn btn-default export-omset hidden" href="" target="_blank">Export</a>
+				    </div>
+				</div>
+				<div class="col-md-12 mb-4">
+					<h5>Grafik Omset</h5>
+					<div id="chart-box-omset">
+						<canvas id="barChartomset"></canvas>
 					</div>
 				</div>
 			</div>
@@ -321,7 +326,7 @@ if ($ket=='omset') {
 				    </div>
 				</div>
 			</div>	
-			<div class="row fadeInLeft slow animated">
+			<div class="row fadeInLeft slow animated mb-5 col-table">
 				<div class="col-md-12"><h2 class="text-center mb-4">Barang Keluar <span id="namacabang"></span></h2></div>
 				<div class="col-md-12">
 					<table id="table-menu" class="table table-striped table-bordered" style="width:100%">
@@ -329,22 +334,34 @@ if ($ket=='omset') {
 				            <tr>
 	                            <th>tanggal</th>
 	                            <th>item</th>
+	                            <th>kategori</th>
+	                            <th>subkategori</th>
 	                            <th>jumlah</th>
 				            </tr>
 				        </thead>
-				        <tfoot>
-				            <tr>
-	                            <th>tanggal</th>
-	                            <th>item</th>
-	                            <th>jumlah</th>
-				            </tr>
-				        </tfoot>
 				    </table>
 				</div>
 				<div class="col-md-12">
+				    <div class="md-form">
+				    	<a class="btn btn-default export-stok hidden" href="" target="_blank">Export</a>
+				    </div>
+				</div>
+				<div class="col-md-12 mb-4">
 					<h5>Grafik Barang Keluar</h5>
 					<div id="chart-box">
 						<canvas id="barChartstokkeluar"></canvas>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<h5>Grafik Barang Keluar per Kategori</h5>
+					<div id="chart-pie-box">
+						<canvas id="pieChartkategori"></canvas>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<h5>Grafik Barang Keluar per SubKategori</h5>
+					<div id="chart-pie-sub-box">
+						<canvas id="pieChartsubkategori"></canvas>
 					</div>
 				</div>
 			</div>
@@ -527,10 +544,9 @@ if ($ket=='omset') {
 						} );
 
 		        	} 
-		        	/*
 		        	$("a.export-omset").removeClass("hidden");
-			        $("a.export-omset").attr("href","../include/export_omset.php?date="+date+"&ket="+daterange);
-			        */
+			        $("a.export-omset").attr("href","export/export-laporan-omset.php?date="+date+"&daterange="+daterange);
+			        
 		        	$("#namacabang").empty();
 		        	$("#namacabang").append(cabangnama);
 		        	console.log("success "+kettext);
@@ -538,97 +554,6 @@ if ($ket=='omset') {
 		        }
 		    });
 		});
-
-	
-		$('.btn-proses-laporan-kasir').on('click',function(){
-			var daterange = $('#daterange').val();
-			var kasir = $('#defaultForm-kasir').val();
-
-			if (daterange=='harian') {
-
-	          	var start = $('#defaultForm-startdate').val();
-	          	var end = $('#defaultForm-enddate').val();
-	          	var kettext = 'transaksi_tanggal';
-				
-			} else if (daterange=='bulanan') {
-
-	          	var start = $("#startyear").val()+"-"+$("#startmonth").val();
-	          	var end = $("#endyear").val()+"-"+$("#endmonth").val();
-	          	var kettext = 'transaksi_bulan';
-				
-			}
-
-			
-			$.ajax({
-		        type:'POST',
-		        url:'api/view.api.php?func=laporan-kasir',
-		        dataType: "json",
-            	data:{
-            		daterange:daterange,
-            		start:start,
-            		end:end,
-            		kasir:kasir
-            	},
-		        success:function(data){
-		        	console.log(kasir);
-		        	$('#table-kasir').DataTable().clear().destroy();
-		        	if (kettext=='transaksi_bulan') {
-			        	$('#table-kasir').DataTable( {
-						    paging: false,
-						    searching: false,
-						    ordering: false,
-						    data: data,
-				            deferRender: true,
-						    columns: [
-						        { data: 'transaksi_bulan' },
-						        { data: 'kasir' },
-				                { render: function(data, type, full){
-				                   return formatRupiah(full['cash'].toString(), 'Rp. ');
-				                  }
-				                },
-				                { render: function(data, type, full){
-				                   return formatRupiah(full['debet'].toString(), 'Rp. ');
-				                  }
-				                },
-				                { render: function(data, type, full){
-				                   return formatRupiah(full['total'].toString(), 'Rp. ');
-				                  }
-				                }
-						    ]
-						} );
-
-		        	} else if (kettext=='transaksi_tanggal') {
-			        	$('#table-kasir').DataTable( {
-						    paging: false,
-						    searching: false,
-						    ordering: false,
-						    data: data,
-				            deferRender: true,
-						    columns: [
-						        { data: 'transaksi_tanggal' },
-						        { data: 'kasir' },
-				                { render: function(data, type, full){
-				                   return formatRupiah(full['cash'].toString(), 'Rp. ');
-				                  }
-				                },
-				                { render: function(data, type, full){
-				                   return formatRupiah(full['debet'].toString(), 'Rp. ');
-				                  }
-				                },
-				                { render: function(data, type, full){
-				                   return formatRupiah(full['total'].toString(), 'Rp. ');
-				                  }
-				                }
-						    ]
-						} );
-
-		        	} 
-
-		        	console.log("success "+kettext);
-		        	console.log(data);
-		        }
-		    });
-		});   
 
 		$('.btn-proses-laporan-menu').on('click',function(){
 			var daterange = $('#daterange').val();
@@ -654,6 +579,7 @@ if ($ket=='omset') {
 	          	var kettext = 'transaksi_bulan';
 				
 			}
+			var date = start+":"+end;
 			console.log(cekcabang+" - "+cabangnama)
 			
 			$.ajax({
@@ -685,6 +611,8 @@ if ($ket=='omset') {
 							    columns: [
 							        { data: 'order_keluar_bulan' },
 							        { data: 'barang_nama' },
+							        { data: 'kategori_nama' },
+							        { data: 'subkategori_nama' },
 							        { data: 'jumlah' }
 							    ]
 							} );
@@ -698,6 +626,8 @@ if ($ket=='omset') {
 							    columns: [
 							        { data: 'order_keluar_tanggal' },
 							        { data: 'barang_nama' },
+							        { data: 'kategori_nama' },
+							        { data: 'subkategori_nama' },
 							        { data: 'jumlah' }
 							    ]
 							} );
@@ -715,6 +645,8 @@ if ($ket=='omset') {
 							    columns: [
 							        { data: 'orderbarang_bulan' },
 							        { data: 'barang_nama' },
+							        { data: 'kategori_nama' },
+							        { data: 'subkategori_nama' },
 							        { data: 'jumlah' }
 							    ]
 							} );
@@ -728,6 +660,8 @@ if ($ket=='omset') {
 							    columns: [
 							        { data: 'orderbarang_tanggal' },
 							        { data: 'barang_nama' },
+							        { data: 'kategori_nama' },
+							        { data: 'subkategori_nama' },
 							        { data: 'jumlah' }
 							    ]
 							} );
@@ -737,6 +671,8 @@ if ($ket=='omset') {
 
 		        	console.log("success "+kettext);
 		        	console.log(data);
+		        	$("a.export-stok").removeClass("hidden");
+			        $("a.export-stok").attr("href","export/export-laporan-stok.php?date="+date+"&daterange="+daterange+"&kategori="+kategori+"&subkategori="+subkategori+"&menu="+menu+"&role="+role+"&cabang="+cabang+"&cekcabang="+cekcabang+"&cabangnama="+cabangnama);
 		        }
 		    });
 
@@ -828,6 +764,146 @@ if ($ket=='omset') {
 		        }
 		    });
 
+		    $.ajax({
+		        type:'POST',
+		        url:'api/view.api.php?func=laporan-menu-grafik-pie',
+		        dataType: "json",
+            	data:{
+            		daterange:daterange,
+            		start:start,
+            		end:end,
+            		kategori:kategori,
+            		subkategori:subkategori,
+            		menu:menu,
+            		role:role,
+            		cabang:cabang,
+            		cekcabang:cekcabang,
+            		cabangnama:cabangnama,
+            		orderby: 'kategori_id'
+            	},
+		        success:function(data){
+
+		        	console.log("success bar "+kettext);
+		        	console.log(data);
+
+		            var n = 0;
+		            var nama = [];
+		            var jumlah = [];
+		            var background = [];
+		            var hover = [];
+		            var hoverBackgroundColor = ["#FF5A5E", "#5AD3D1", "#FFC870", "#A8B3C5", "#616774"];
+					var lengthcolor = hoverBackgroundColor.length;
+					var backgroundColor = ["#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360"];
+		            for (var i in data) {
+		            	if (n==lengthcolor) {
+		            		n = 0;
+		            	}
+		                nama.push(data[i].kategori_nama);
+		                jumlah.push(data[i].jumlah);
+		                hover.push(hoverBackgroundColor[n]);
+		                background.push(backgroundColor[n]);
+
+		                n++;
+		            }
+		            $("#pieChartkategori").remove();
+		            $('#chart-pie-box').append('<canvas id="pieChartkategori"><canvas>');
+			        var ctxB = document.getElementById("pieChartkategori").getContext('2d');
+					var myPieChart = new Chart(ctxB, {
+						type: 'pie',
+						data: {
+							labels: nama,
+							datasets: [{
+								label: '',
+								data: jumlah,
+								backgroundColor: background,
+								hoverBackgroundColor: hover
+							}]
+						},
+						options: {
+			                responsive: true,
+			                aspectRatio: 2,
+							scales: {
+								yAxes: [{
+									ticks: {
+										beginAtZero: true
+									}
+								}]
+							}
+						}
+					});
+					myPieChart.update();
+
+		        }
+		    });
+
+		    $.ajax({
+		        type:'POST',
+		        url:'api/view.api.php?func=laporan-menu-grafik-pie',
+		        dataType: "json",
+            	data:{
+            		daterange:daterange,
+            		start:start,
+            		end:end,
+            		kategori:kategori,
+            		subkategori:subkategori,
+            		menu:menu,
+            		role:role,
+            		cabang:cabang,
+            		cekcabang:cekcabang,
+            		cabangnama:cabangnama,
+            		orderby: 'subkategori_id'
+            	},
+		        success:function(data){
+
+		            var n = 0;
+		            var nama = [];
+		            var jumlah = [];
+		            var background = [];
+		            var hover = [];
+		            var hoverBackgroundColor = ["#616774", "#FFC870", "#A8B3C5", "#5AD3D1", "#FF5A5E"];
+					var lengthcolor = hoverBackgroundColor.length;
+					var backgroundColor = ["#4D5360", "#FDB45C", "#949FB1", "#46BFBD", "#F7464A"];
+		            for (var i in data) {
+		            	if (n==lengthcolor) {
+		            		n = 0;
+		            	}
+		                nama.push(data[i].subkategori_nama);
+		                jumlah.push(data[i].jumlah);
+		                hover.push(hoverBackgroundColor[n]);
+		                background.push(backgroundColor[n]);
+
+		                n++;
+		            }
+		            $("#pieChartsubkategori").remove();
+		            $('#chart-pie-sub-box').append('<canvas id="pieChartsubkategori"><canvas>');
+			        var ctxB = document.getElementById("pieChartsubkategori").getContext('2d');
+					var myPieChart = new Chart(ctxB, {
+						type: 'pie',
+						data: {
+							labels: nama,
+							datasets: [{
+								label: '',
+								data: jumlah,
+								backgroundColor: background,
+								hoverBackgroundColor: hover
+							}]
+						},
+						options: {
+			                responsive: true,
+			                aspectRatio: 2,
+							scales: {
+								yAxes: [{
+									ticks: {
+										beginAtZero: true
+									}
+								}]
+							}
+						}
+					});
+					myPieChart.update();
+
+		        }
+		    });
 		});           
 	});
 

@@ -74,6 +74,12 @@ if ($_GET['ket']=='produk') {
 	
 } elseif ($_GET['ket']=='konfpesanan') {
 
+	$sql = mysqli_query($con, "SELECT * FROM orderbarang, users, cabang where orderbarang_user_pesan=id and users.cabang=cabang_id" ); 
+	$sql_count = mysqli_num_rows($sql);
+	$query = "SELECT * FROM orderbarang, users, cabang where orderbarang_user_pesan=id and users.cabang=cabang_id and (orderbarang_no_pesan LIKE '%".$search."%' OR name LIKE '%".$search."%' OR orderbarang_status LIKE '%".$search."%')";
+	
+} elseif ($_GET['ket']=='konfpesanan-dashboard') {
+
 	$sql = mysqli_query($con, "SELECT * FROM orderbarang, users, cabang where orderbarang_user_pesan=id and users.cabang=cabang_id and orderbarang_status NOT LIKE '%Selesai%'" ); 
 	$sql_count = mysqli_num_rows($sql);
 	$query = "SELECT * FROM orderbarang, users, cabang where orderbarang_user_pesan=id and users.cabang=cabang_id and orderbarang_status NOT LIKE '%Selesai%' and (orderbarang_no_pesan LIKE '%".$search."%' OR name LIKE '%".$search."%' OR orderbarang_status LIKE '%".$search."%')";
