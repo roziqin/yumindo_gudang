@@ -55,8 +55,9 @@
 <!-------------- End modal tambah produk -------------->
 
   <script type="text/javascript">
-    $(document).ready(function(){var canvas = document.querySelector("canvas");
-        var signaturePad = new SignaturePad(canvas);
+    $(document).ready(function(){
+      var canvas = document.querySelector("canvas");
+      var signaturePad = new SignaturePad(canvas);
 
       $(".btn-proses").click(function(){
         

@@ -16,10 +16,28 @@ if($_GET['ket']=='submit-produk'){
 	} else {
 		$disable = $_POST['ip-disable'];
 	}
+	$nama_foto = "";
+	if (isset($_FILES['ip-foto-1']) || isset($_FILES['ip-foto-2']) || isset($_FILES['ip-foto-3'])) {
+		if ($foto1!="") {
+			$file_tmp = $_FILES['ip-foto-1']['tmp_name'];
+			move_uploaded_file($file_tmp, '../../assets/img/'.$foto1);
+		}
 
-	
-	$sql = "INSERT into barang(barang_nama,barang_subkategori,barang_sku,barang_harga_jual,barang_disable)values('$nama','$subkategori','$sku','$jual','$disable')";
+		if ($foto2!="") {
+			$file_tmp = $_FILES['ip-foto-2']['tmp_name'];
+			move_uploaded_file($file_tmp, '../../assets/img/'.$foto2);
+		}
 
+		if ($foto3!="") {
+			$file_tmp = $_FILES['ip-foto-3']['tmp_name'];
+			move_uploaded_file($file_tmp, '../../assets/img/'.$foto3);
+		}
+
+		$sql = "INSERT into barang(barang_nama,barang_subkategori,barang_sku,barang_harga_jual,barang_disable,barang_image_1,barang_image_2,barang_image_3)values('$nama','$subkategori','$sku','$jual','$disable','$foto1','$foto2','$foto3')";
+
+	} else {
+		$sql = "INSERT into barang(barang_nama,barang_subkategori,barang_sku,barang_harga_jual,barang_disable)values('$nama','$subkategori','$sku','$jual','$disable')";
+	}
 	
 
 	mysqli_query($con,$sql);
@@ -43,10 +61,38 @@ if($_GET['ket']=='submit-produk'){
 	$query1=mysqli_query($con,$sql1);
 	$data=mysqli_fetch_assoc($query1);
 
-	//mysqli_query($con,"INSERT INTO log_harga(barang_id,harga_beli_awal,harga_beli_baru,harga_jual_awal,harga_jual_baru,user,tanggal) VALUES ('$id','$data[barang_harga_beli]','$beli','$data[barang_harga_jual]','$jual','$user','$tgl')");
+	$foto1 = $data["barang_image_1"];
+	$foto2 = $data["barang_image_2"];
+	$foto3 = $data["barang_image_3"];
 
-	$sql="UPDATE barang set barang_nama='$nama',barang_subkategori='$subkategori',barang_sku='$sku',barang_harga_jual='$jual',barang_disable='$disable' where barang_id='$id'";
+	if (isset($_FILES['ip-foto-1']) || isset($_FILES['ip-foto-2']) || isset($_FILES['ip-foto-3'])) {
+		$tempfoto1 = $_FILES['ip-foto-1']['name'];
+		$tempfoto2 = $_FILES['ip-foto-2']['name'];
+		$tempfoto3 = $_FILES['ip-foto-3']['name'];
+		if ($tempfoto1!="") {
+			$foto1 = $tempfoto1;
+			$file_tmp = $_FILES['ip-foto-1']['tmp_name'];
+			move_uploaded_file($file_tmp, '../../assets/img/'.$tempfoto1);
+		}
 
+		if ($tempfoto2!="") {
+			$foto2 = $tempfoto2;
+			$file_tmp = $_FILES['ip-foto-2']['tmp_name'];
+			move_uploaded_file($file_tmp, '../../assets/img/'.$tempfoto2);
+		}
+
+		if ($tempfoto3!="") {
+			$foto3 = $tempfoto3;
+			$file_tmp = $_FILES['ip-foto-3']['tmp_name'];
+			move_uploaded_file($file_tmp, '../../assets/img/'.$tempfoto3);
+		}
+
+		$sql="UPDATE barang set barang_nama='$nama',barang_subkategori='$subkategori',barang_sku='$sku',barang_harga_jual='$jual',barang_disable='$disable', barang_image_1='$foto1', barang_image_2='$foto2', barang_image_3='$foto3' where barang_id='$id'";
+
+	} else {
+
+		$sql="UPDATE barang set barang_nama='$nama',barang_subkategori='$subkategori',barang_sku='$sku',barang_harga_jual='$jual',barang_disable='$disable' where barang_id='$id'";
+	}
 
 	mysqli_query($con,$sql);
 	

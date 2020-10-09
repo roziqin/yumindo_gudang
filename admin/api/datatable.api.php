@@ -1,5 +1,5 @@
 <?php
-include '../../config/database.php';
+$con = mysqli_connect("localhost","root","","gudang_yumindo");
 session_start();
 $user = $_SESSION['login_user'];
 $cabang = $_SESSION['cabang'];
@@ -7,6 +7,7 @@ $role = $_SESSION['role'];
 $search = $_POST['search']['value']; // Ambil data yang di ketik user pada textbox pencarian
 $limit = $_POST['length']; // Ambil data limit per page
 $start = $_POST['start']; // Ambil data start
+$data = array();
 
 if ($_GET['ket']=='produk') {
 
@@ -74,6 +75,12 @@ if ($_GET['ket']=='produk') {
 	
 } elseif ($_GET['ket']=='konfpesanan') {
 
+	$sql = mysqli_query($con, "SELECT * FROM orderbarang, users, cabang where orderbarang_user_pesan=id and users.cabang=cabang_id" ); 
+	$sql_count = mysqli_num_rows($sql);
+	$query = "SELECT * FROM orderbarang, users, cabang where orderbarang_user_pesan=id and users.cabang=cabang_id and (orderbarang_no_pesan LIKE '%".$search."%' OR name LIKE '%".$search."%' OR orderbarang_status LIKE '%".$search."%')";
+	
+} elseif ($_GET['ket']=='konfpesanan-dashboard') {
+
 	$sql = mysqli_query($con, "SELECT * FROM orderbarang, users, cabang where orderbarang_user_pesan=id and users.cabang=cabang_id and orderbarang_status NOT LIKE '%Selesai%'" ); 
 	$sql_count = mysqli_num_rows($sql);
 	$query = "SELECT * FROM orderbarang, users, cabang where orderbarang_user_pesan=id and users.cabang=cabang_id and orderbarang_status NOT LIKE '%Selesai%' and (orderbarang_no_pesan LIKE '%".$search."%' OR name LIKE '%".$search."%' OR orderbarang_status LIKE '%".$search."%')";
@@ -110,6 +117,9 @@ if ($_GET['ket']=='produk') {
 		$row_array['barang_sku'] = $dataarray['barang_sku'];
 		$row_array['barang_harga_jual'] = $dataarray['barang_harga_jual'];
 		$row_array['barang_disable'] = $dataarray['barang_disable'];
+		$row_array['barang_image_1'] = $dataarray['barang_image_1'];
+		$row_array['barang_image_2'] = $dataarray['barang_image_2'];
+		$row_array['barang_image_3'] = $dataarray['barang_image_3'];
 		
 
         array_push($data,$row_array);
@@ -154,7 +164,10 @@ if ($_GET['ket']=='produk') {
 	}
 	$sql_count = $n;
 }*/ else {
-	$data = mysqli_fetch_all($sql_data, MYSQLI_ASSOC); // Untuk mengambil data hasil query menjadi array
+	while ($row = mysqli_fetch_assoc($sql_data)) {
+	    $data[] = $row;
+	}
+	//$data = mysqli_fetch_all($sql_data, MYSQLI_ASSOC); // Untuk mengambil data hasil query menjadi array
 
 }
 $callback = array(

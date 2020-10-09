@@ -2,6 +2,7 @@
 session_start();
 include '../../config/database.php';
 include "../../include/slug.php";
+include "../../include/format_rupiah.php";
 date_default_timezone_set('Asia/jakarta');
 $tgl=date('Y-m-j');
 $bln=date('Y-m');
@@ -38,7 +39,78 @@ if($_GET['ket']=='tambahmenu'){
 	$queryc=mysqli_query($con,$sqlc);
 	$datac=mysqli_fetch_assoc($queryc);
 
-	$harga = $data['barang_harga_jual'] + ($datac['cabang_selisih_harga']);
+	if ($datac['cabang_selisih_harga']>0) {
+		$selisihharga = format_rupiah($data['barang_harga_jual']*($datac['cabang_selisih_harga']/100));
+
+	    $text_line = explode(".",$selisihharga);
+	    $length=count($text_line);
+	    
+		if ($length==1) {
+		  if ($text_line[0]== 0) {
+		    $tax2="000"; 
+		  } elseif (0<$text_line[0] && $text_line[0]<=100) {
+		    $tax2 = 100;
+		  } elseif (100<$text_line[0] && $text_line[0]<=200) {
+		    $tax2 = 200;
+		  } elseif (200<$text_line[0] && $text_line[0]<=300) {
+		    $tax2 = 300;
+		  } elseif (300<$text_line[0] && $text_line[0]<=400) {
+		    $tax2 = 400;
+		  } elseif (400<$text_line[0] && $text_line[0]<=500) {
+		    $tax2 = 500;
+		  } elseif (500<$text_line[0] && $text_line[0]<=600) {
+		    $tax2 = 600;
+		  } elseif (600<$text_line[0] && $text_line[0]<=700) {
+		    $tax2 = 700;
+		  } elseif (700<$text_line[0] && $text_line[0]<=800) {
+		    $tax2 = 800;
+		  } elseif (800<$text_line[0] && $text_line[0]<=900) {
+		    $tax2 = 900;
+		  } else {
+		    $tax2 = 1000;
+		  }
+		  # code...
+		}elseif ($length==2) {
+		  if ($text_line[1]== 0) {
+		    $tax2=$text_line[0]."000";
+		  } elseif (0<$text_line[1] && $text_line[1]<=100) {
+		    $n = 100;
+		    $tax2=$text_line[0]."".$n;
+		  } elseif (100<$text_line[1] && $text_line[1]<=200) {
+		    $n = 200;
+		    $tax2=$text_line[0]."".$n;
+		  } elseif (200<$text_line[1] && $text_line[1]<=300) {
+		    $n = 300;
+		    $tax2=$text_line[0]."".$n;
+		  } elseif (300<$text_line[1] && $text_line[1]<=400) {
+		    $n = 400;
+		    $tax2=$text_line[0]."".$n;
+		  } elseif (400<$text_line[1] && $text_line[1]<=500) {
+		    $n = 500;
+		    $tax2=$text_line[0]."".$n;
+		  } elseif (500<$text_line[1] && $text_line[1]<=600) {
+		    $n = 600;
+		    $tax2=$text_line[0]."".$n;
+		  } elseif (600<$text_line[1] && $text_line[1]<=700) {
+		    $n = 700;
+		    $tax2=$text_line[0]."".$n;
+		  } elseif (700<$text_line[1] && $text_line[1]<=800) {
+		    $n = 800;
+		    $tax2=$text_line[0]."".$n;
+		  } elseif (800<$text_line[1] && $text_line[1]<=900) {
+		    $n = 900;
+		    $tax2=$text_line[0]."".$n;
+		  } else {
+		    $n = 000;
+		    $tax2=($text_line[0]+1)."000";
+		  }
+		}
+
+		$harga = $data['barang_harga_jual'] + $tax2;
+		
+	} else {
+		$harga = $data['barang_harga_jual'];
+	}
 	$total = $harga * $jml;
 	if ($jml>$data['barang_stok']) {
 

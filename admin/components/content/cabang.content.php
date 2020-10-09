@@ -6,7 +6,7 @@
             <tr>
                 <th>nama cabang</th>
                 <th>alamat</th>
-                <th>selisih harga</th>
+                <th>selisih harga (%)</th>
                 <th></th>
             </tr>
         </thead>

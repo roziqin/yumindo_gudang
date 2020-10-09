@@ -176,7 +176,12 @@ if ($role=="md") {
 } else {
 ?>
 	<div class="row">
-		<div class="col-md-7">
+		<div class="col-md-3">
+			<h5>Nilai Stok hari ini</h5>
+			<h3 class="nilaistok"></h3>
+			
+		</div>
+		<div class="col-md-5">
 			<h5>Stok Barang dibawah batas</h5>
 			<table id="table-batas-stok-pusat" class="table table-striped table-bordered fadeInLeft slow animated" style="width:100%">
 		        <thead>
@@ -190,7 +195,7 @@ if ($role=="md") {
 		    </table>
 			
 		</div>
-		<div class="col-md-5">
+		<div class="col-md-4">
 			<h5>List Pemesanan</h5>
 			<table id="example" class="table table-striped table-bordered fadeInLeft slow animated" style="width:100%">
 		        <thead>
@@ -221,7 +226,7 @@ if ($role=="md") {
 		    },
             "ajax": 
             {
-                "url": "api/datatable.api.php?ket=konfpesanan", // URL file untuk proses select datanya
+                "url": "api/datatable.api.php?ket=konfpesanan-dashboard", // URL file untuk proses select datanya
                 "type": "POST"
             },
             "deferRender": true,
@@ -293,10 +298,15 @@ if ($role=="md") {
 	            	if (n==lengthcolor) {
 	            		n = 0;
 	            	}
-	                nama.push(data[i].barang_nama);
-	                jumlah.push(data[i].jumlah);
-	                background.push(color[n]);
-	                border.push(bordercolor[n]);
+	                
+	            	if (i==0) {
+	            		$("h3.nilaistok").text(formatRupiah(data[0].nilaistok.toString(), 'Rp. '));
+	            	} else {
+		                nama.push(data[i].barang_nama);
+		                jumlah.push(data[i].jumlah);
+		                background.push(color[n]);
+		                border.push(bordercolor[n]);
+	                }
 
 	                n++;
 	            }

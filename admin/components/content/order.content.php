@@ -87,7 +87,7 @@ if ($kond=='home' || $kond=='') { ?>
                                                 <td><strong class=""><?php echo $databarang['subkategori_nama']; ?></strong></td>
                                                 <td><span class="stok <?php echo $stok_status; ?>"><?php echo $databarang['barang_stok']; ?></span></td>
                                                 <td>
-                                                    <button class="btn btn-default pilihmenu m-0" data-id="<?php echo $databarang['barang_id']; ?>">Pilih <i class="fas fa-magic ml-1"></i></button>
+                                                    <button class="btn btn-default pilihmenu m-0" data-id="<?php echo $databarang['barang_id']; ?>" data-nama="<?php echo $databarang['barang_nama']; ?>">Pilih <i class="fas fa-magic ml-1"></i></button>
                                                 </td>
                                             </tr>
                                             <?php
@@ -213,6 +213,7 @@ if ($kond=='home' || $kond=='') { ?>
     	<div class="col-md-6 mt-5">
     		<h3 class="text-center mb-5">Input Jumlah</h3>
 	    	<form method="post" class="form-jumlah">
+                <h4 class="text-center mb-0" id="namabarang"><?php echo $_GET['nama']; ?></h4>
 	    		<input type="hidden" id="barang_id" class="form-control" value="<?php echo $_GET['id']; ?>" name="barang_id">  	
 	    		<div class="md-form mb-3">
 				  	<input type="text" id="jumlah" class="form-control" name="jumlah" >
@@ -390,7 +391,9 @@ if ($kond=='home' || $kond=='') { ?>
                 $('.pilihmenu').on('click',function(e){
                     if(e.handled !== true) {
                         var barang_id = $(this).data('id');
-                        $('.container__load').load('components/content/order.content.php?kond=jumlah&id='+barang_id);
+                        var barang_nama = $(this).data('nama');
+                        var nama = encodeURI(barang_nama);
+                        $('.container__load').load('components/content/order.content.php?kond=jumlah&nama=&id='+barang_id+'&nama='+nama);
                         e.handled = true;
                     }
                 }); 
@@ -466,12 +469,12 @@ if ($kond=='home' || $kond=='') { ?>
             }
         });
     }
-
+/*
 	$('.pilihmenu').on('click',function(){
 		var barang_id = $(this).data('id');
 		$('.container__load').load('components/content/order.content.php?kond=jumlah&id='+barang_id);
 	});
-
+*/
     $('.pilihjenis').on('click',function(){
         var jenis_id = $(this).data('id');
         $('.container__load').load('components/content/order.content.php?kond=item&jenisid='+jenis_id);

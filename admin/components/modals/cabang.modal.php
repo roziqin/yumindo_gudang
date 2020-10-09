@@ -22,7 +22,7 @@
             </div>
             <div class="md-form mb-0">
               <input type="text" id="defaultForm-harga" class="form-control validate mb-3" name="ip-harga">
-              <label for="defaultForm-harga">Selisih Harga Cabang</label>
+              <label for="defaultForm-harga">Selisih Harga Cabang (%)</label>
             </div>
         </div>
         <div class="modal-footer d-flex justify-content-center">

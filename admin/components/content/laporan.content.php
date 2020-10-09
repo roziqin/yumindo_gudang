@@ -22,7 +22,6 @@ if ($ket=='omset') {
 				        </select>
 				    </div>
 				</div>
-				<?php /*
 				<div class="col-md-2">
 				    <div class="md-form">
 				        <select class="mdb-select md-form" id="defaultForm-cabang" name="ip-cabang">
@@ -36,8 +35,7 @@ if ($ket=='omset') {
 				        </select>
 				    </div>
 				</div>
-				*/ ?>
-				<div class="col-md-8">
+				<div class="col-md-6">
 					<div class="row form-date">
 						<div class="col-md-6">
 				            <div class="md-form">
@@ -123,22 +121,27 @@ if ($ket=='omset') {
 				    </div>
 				</div>
 			</div>	
-			<div class="row fadeInLeft slow animated">
-					<div class="col-md-12"><h2 class="text-center mb-4">Omset <span id="namacabang"></span></h2></div>
-					<div class="col-md-12">
-						<table id="table-omset" class="table table-striped table-bordered" style="width:100%">
-					        <thead>
-					            <tr>
-		                            <th>tanggal</th>
-		                            <th style="text-align: right;">Omset</th>
-					            </tr>
-					        </thead>
-					    </table>
-					</div>
-					<div class="col-md-12">
-					    <div class="md-form">
-					    	<a class="btn btn-default export-omset hidden" href="" target="_blank">Export</a>
-					    </div>
+			<div class="row fadeInLeft slow animated col-table">
+				<div class="col-md-12"><h2 class="text-center mb-4">Omset <span id="namacabang"></span></h2></div>
+				<div class="col-md-12">
+					<table id="table-omset" class="table table-striped table-bordered" style="width:100%">
+				        <thead>
+				            <tr>
+	                            <th>tanggal</th>
+	                            <th style="text-align: right;">Omset</th>
+				            </tr>
+				        </thead>
+				    </table>
+				</div>
+				<div class="col-md-12">
+				    <div class="md-form">
+				    	<a class="btn btn-default export-omset hidden" href="" target="_blank">Export</a>
+				    </div>
+				</div>
+				<div class="col-md-12 mb-4">
+					<h5>Grafik Omset</h5>
+					<div id="chart-box-omset">
+						<canvas id="lineChartomset"></canvas>
 					</div>
 				</div>
 			</div>
@@ -215,23 +218,6 @@ if ($ket=='omset') {
 				    <div class="md-form">
 				        <select class="mdb-select md-form" id="defaultForm-menu" name="ip-menu">
 		                    <option value="0" selected>Pilih barang</option>
-		                <?php
-		                	if ($role=="md") {
-		                		
-			                	$sql="SELECT * from barang, barang_cabang where barang_id=barang_cabang_barang_id and barang_cabang_cabang_id='$cabang'";
-			                  	$result=mysqli_query($con,$sql);
-			                  	while ($data1=mysqli_fetch_array($result,MYSQLI_ASSOC)) {
-			                      	echo "<option value='$data1[barang_cabang_id]'>$data1[barang_nama]</option>";
-			                  	}
-		                	
-		                	} else {
-			                	$sql="SELECT * from barang";
-			                  	$result=mysqli_query($con,$sql);
-			                  	while ($data1=mysqli_fetch_array($result,MYSQLI_ASSOC)) {
-			                      	echo "<option value='$data1[barang_id]'>$data1[barang_nama]</option>";
-			                  	}
-			                }
-		                ?>
 				        </select>
 				    </div>
 				</div>
@@ -321,7 +307,7 @@ if ($ket=='omset') {
 				    </div>
 				</div>
 			</div>	
-			<div class="row fadeInLeft slow animated">
+			<div class="row fadeInLeft slow animated mb-5 col-table">
 				<div class="col-md-12"><h2 class="text-center mb-4">Barang Keluar <span id="namacabang"></span></h2></div>
 				<div class="col-md-12">
 					<table id="table-menu" class="table table-striped table-bordered" style="width:100%">
@@ -329,22 +315,34 @@ if ($ket=='omset') {
 				            <tr>
 	                            <th>tanggal</th>
 	                            <th>item</th>
+	                            <th>kategori</th>
+	                            <th>subkategori</th>
 	                            <th>jumlah</th>
 				            </tr>
 				        </thead>
-				        <tfoot>
-				            <tr>
-	                            <th>tanggal</th>
-	                            <th>item</th>
-	                            <th>jumlah</th>
-				            </tr>
-				        </tfoot>
 				    </table>
 				</div>
 				<div class="col-md-12">
+				    <div class="md-form">
+				    	<a class="btn btn-default export-stok hidden" href="" target="_blank">Export</a>
+				    </div>
+				</div>
+				<div class="col-md-12 mb-4">
 					<h5>Grafik Barang Keluar</h5>
 					<div id="chart-box">
 						<canvas id="barChartstokkeluar"></canvas>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<h5>Grafik Barang Keluar per Kategori</h5>
+					<div id="chart-pie-box">
+						<canvas id="pieChartkategori"></canvas>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<h5>Grafik Barang Keluar per SubKategori</h5>
+					<div id="chart-pie-sub-box">
+						<canvas id="pieChartsubkategori"></canvas>
 					</div>
 				</div>
 			</div>
@@ -353,6 +351,52 @@ if ($ket=='omset') {
 
 <?php
 
+} elseif ($ket=='stok') {
+
+	?>
+	<div class="row justify-content-md-center">
+		<div class="col-md-10">
+			<div class="row">
+				<div class="col-md-3">
+				    <div class="md-form">
+				        <select class="mdb-select md-form" id="defaultForm-cabang" name="ip-cabang">
+		                <?php
+		                	$sql="SELECT * from cabang";
+		                  	$result=mysqli_query($con,$sql);
+		                  	while ($data1=mysqli_fetch_array($result,MYSQLI_ASSOC)) {
+		                  		if ($data1['cabang_nama']=='Pusat') {
+		                  			# code...
+		                  		} else {
+			                      	echo "<option value='$data1[cabang_id]'>$data1[cabang_nama]</option>";
+		                      	}
+		                  	}
+		                ?>
+				        </select>
+				    </div>
+				</div>
+				<div class="col-md-2">
+				    <div class="md-form">
+				    	<button class="btn btn-primary btn-proses-laporan-stok">Proses</button>
+				    </div>
+				</div>
+			</div>	
+			<div class="row fadeInLeft slow animated col-table">
+				<div class="col-md-12"><h2 class="text-center mb-4">Stok <span id="namacabangstok"></span> Hari ini</h2></div>
+				<div class="col-md-12">
+					<table id="table-stok" class="table table-striped table-bordered" style="width:100%">
+				        <thead>
+				            <tr>
+	                            <th>Nama Barang</th>
+	                            <th style="">Jumlah</th>
+				            </tr>
+				        </thead>
+				    </table>
+				</div>
+			</div>
+		</div>
+	</div>
+
+<?php
 } 
 
 ?>
@@ -527,108 +571,98 @@ if ($ket=='omset') {
 						} );
 
 		        	} 
-		        	/*
 		        	$("a.export-omset").removeClass("hidden");
-			        $("a.export-omset").attr("href","../include/export_omset.php?date="+date+"&ket="+daterange);
-			        */
+			        $("a.export-omset").attr("href","export/export-laporan-omset.php?date="+date+"&daterange="+daterange);
+			        
 		        	$("#namacabang").empty();
 		        	$("#namacabang").append(cabangnama);
 		        	console.log("success "+kettext);
 		        	console.log(data);
 		        }
 		    });
-		});
 
-	
-		$('.btn-proses-laporan-kasir').on('click',function(){
-			var daterange = $('#daterange').val();
-			var kasir = $('#defaultForm-kasir').val();
-
-			if (daterange=='harian') {
-
-	          	var start = $('#defaultForm-startdate').val();
-	          	var end = $('#defaultForm-enddate').val();
-	          	var kettext = 'transaksi_tanggal';
-				
-			} else if (daterange=='bulanan') {
-
-	          	var start = $("#startyear").val()+"-"+$("#startmonth").val();
-	          	var end = $("#endyear").val()+"-"+$("#endmonth").val();
-	          	var kettext = 'transaksi_bulan';
-				
-			}
-
-			
 			$.ajax({
 		        type:'POST',
-		        url:'api/view.api.php?func=laporan-kasir',
+		        url:'api/view.api.php?func=laporan-omset',
 		        dataType: "json",
             	data:{
             		daterange:daterange,
             		start:start,
-            		end:end,
-            		kasir:kasir
+            		end:end
             	},
 		        success:function(data){
-		        	console.log(kasir);
-		        	$('#table-kasir').DataTable().clear().destroy();
-		        	if (kettext=='transaksi_bulan') {
-			        	$('#table-kasir').DataTable( {
-						    paging: false,
-						    searching: false,
-						    ordering: false,
-						    data: data,
-				            deferRender: true,
-						    columns: [
-						        { data: 'transaksi_bulan' },
-						        { data: 'kasir' },
-				                { render: function(data, type, full){
-				                   return formatRupiah(full['cash'].toString(), 'Rp. ');
-				                  }
-				                },
-				                { render: function(data, type, full){
-				                   return formatRupiah(full['debet'].toString(), 'Rp. ');
-				                  }
-				                },
-				                { render: function(data, type, full){
-				                   return formatRupiah(full['total'].toString(), 'Rp. ');
-				                  }
-				                }
-						    ]
-						} );
 
+		        	var date = [];
+		            var total = [];
+		            var omset = 0;
+		            if (kettext=='transaksi_bulan') {
+			            for (var i in data) {
+			                date.push(moment(new Date(data[i].orderbarang_bulan)).format('MMM YYYY'));
+			                total.push(data[i].total);
+			                omset += parseInt(data[i].total);
+			            }
 		        	} else if (kettext=='transaksi_tanggal') {
-			        	$('#table-kasir').DataTable( {
-						    paging: false,
-						    searching: false,
-						    ordering: false,
-						    data: data,
-				            deferRender: true,
-						    columns: [
-						        { data: 'transaksi_tanggal' },
-						        { data: 'kasir' },
-				                { render: function(data, type, full){
-				                   return formatRupiah(full['cash'].toString(), 'Rp. ');
-				                  }
-				                },
-				                { render: function(data, type, full){
-				                   return formatRupiah(full['debet'].toString(), 'Rp. ');
-				                  }
-				                },
-				                { render: function(data, type, full){
-				                   return formatRupiah(full['total'].toString(), 'Rp. ');
-				                  }
-				                }
-						    ]
-						} );
+			        	
+						for (var i in data) {
+			                date.push(moment(new Date(data[i].orderbarang_tanggal)).format('DD MMM YYYY'));
+			                total.push(data[i].total);
+			                omset += parseInt(data[i].total);
+			            }
 
-		        	} 
+		        	}
+		            $("#lineChartomset").remove();
+		            $('#chart-box-omset').append('<canvas id="lineChartomset"><canvas>');
+		            var ctxL = document.getElementById("lineChartomset").getContext('2d');
+		            var myLineChart = new Chart(ctxL, {
+		                type: 'line',
+		                data: {
+		                    labels: date,
+		                    datasets: [{
+		                            label: "",
+		                            data: total,
+		                            backgroundColor: [
+		                                'rgba(0, 137, 132, .2)',
+		                            ],
+		                            borderColor: [
+		                                'rgba(0, 10, 130, .7)',
+		                            ],
+		                            borderWidth: 2
+		                        }
+		                    ]
+		                },
+		                options: {
+		                    responsive: true,
+		                    aspectRatio: 2,
+		                    tooltips: {
+		                      callbacks: {
+		                        label: function(t, d) {
+		                           var xLabel = d.datasets[t.datasetIndex].label;
+		                           var yLabel = t.yLabel >= 1000 ? '$' + t.yLabel.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '$' + t.yLabel;
+		                           return xLabel + ': ' + yLabel;
+		                        }
+		                      }
+		                    },
+		                    scales: {
+		                      yAxes: [{
+		                        ticks: {
+		                           callback: function(value, index, total) {
+		                              if (parseInt(value) >= 1000) {
+		                                 return 'Rp. ' + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+		                              } else {
+		                                 return 'Rp. ' + value;
+		                              }
+		                           }
+		                        }
+		                      }]
+		                    }
+		                }
+		            });
+					myLineChart.update();
 
-		        	console.log("success "+kettext);
-		        	console.log(data);
 		        }
 		    });
-		});   
+
+		});
 
 		$('.btn-proses-laporan-menu').on('click',function(){
 			var daterange = $('#daterange').val();
@@ -654,6 +688,7 @@ if ($ket=='omset') {
 	          	var kettext = 'transaksi_bulan';
 				
 			}
+			var date = start+":"+end;
 			console.log(cekcabang+" - "+cabangnama)
 			
 			$.ajax({
@@ -685,6 +720,8 @@ if ($ket=='omset') {
 							    columns: [
 							        { data: 'order_keluar_bulan' },
 							        { data: 'barang_nama' },
+							        { data: 'kategori_nama' },
+							        { data: 'subkategori_nama' },
 							        { data: 'jumlah' }
 							    ]
 							} );
@@ -698,6 +735,8 @@ if ($ket=='omset') {
 							    columns: [
 							        { data: 'order_keluar_tanggal' },
 							        { data: 'barang_nama' },
+							        { data: 'kategori_nama' },
+							        { data: 'subkategori_nama' },
 							        { data: 'jumlah' }
 							    ]
 							} );
@@ -715,6 +754,8 @@ if ($ket=='omset') {
 							    columns: [
 							        { data: 'orderbarang_bulan' },
 							        { data: 'barang_nama' },
+							        { data: 'kategori_nama' },
+							        { data: 'subkategori_nama' },
 							        { data: 'jumlah' }
 							    ]
 							} );
@@ -728,6 +769,8 @@ if ($ket=='omset') {
 							    columns: [
 							        { data: 'orderbarang_tanggal' },
 							        { data: 'barang_nama' },
+							        { data: 'kategori_nama' },
+							        { data: 'subkategori_nama' },
 							        { data: 'jumlah' }
 							    ]
 							} );
@@ -737,6 +780,8 @@ if ($ket=='omset') {
 
 		        	console.log("success "+kettext);
 		        	console.log(data);
+		        	$("a.export-stok").removeClass("hidden");
+			        $("a.export-stok").attr("href","export/export-laporan-stok.php?date="+date+"&daterange="+daterange+"&kategori="+kategori+"&subkategori="+subkategori+"&menu="+menu+"&role="+role+"&cabang="+cabang+"&cekcabang="+cekcabang+"&cabangnama="+cabangnama);
 		        }
 		    });
 
@@ -828,6 +873,179 @@ if ($ket=='omset') {
 		        }
 		    });
 
+		    $.ajax({
+		        type:'POST',
+		        url:'api/view.api.php?func=laporan-menu-grafik-pie',
+		        dataType: "json",
+            	data:{
+            		daterange:daterange,
+            		start:start,
+            		end:end,
+            		kategori:kategori,
+            		subkategori:subkategori,
+            		menu:menu,
+            		role:role,
+            		cabang:cabang,
+            		cekcabang:cekcabang,
+            		cabangnama:cabangnama,
+            		orderby: 'kategori_id'
+            	},
+		        success:function(data){
+
+		        	console.log("success bar "+kettext);
+		        	console.log(data);
+
+		            var n = 0;
+		            var nama = [];
+		            var jumlah = [];
+		            var background = [];
+		            var hover = [];
+		            var hoverBackgroundColor = ["#FF5A5E", "#5AD3D1", "#FFC870", "#A8B3C5", "#616774"];
+					var lengthcolor = hoverBackgroundColor.length;
+					var backgroundColor = ["#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360"];
+		            for (var i in data) {
+		            	if (n==lengthcolor) {
+		            		n = 0;
+		            	}
+		                nama.push(data[i].kategori_nama);
+		                jumlah.push(data[i].jumlah);
+		                hover.push(hoverBackgroundColor[n]);
+		                background.push(backgroundColor[n]);
+
+		                n++;
+		            }
+		            $("#pieChartkategori").remove();
+		            $('#chart-pie-box').append('<canvas id="pieChartkategori"><canvas>');
+			        var ctxB = document.getElementById("pieChartkategori").getContext('2d');
+					var myPieChart = new Chart(ctxB, {
+						type: 'pie',
+						data: {
+							labels: nama,
+							datasets: [{
+								label: '',
+								data: jumlah,
+								backgroundColor: background,
+								hoverBackgroundColor: hover
+							}]
+						},
+						options: {
+			                responsive: true,
+			                aspectRatio: 2,
+							scales: {
+								yAxes: [{
+									ticks: {
+										beginAtZero: true
+									}
+								}]
+							}
+						}
+					});
+					myPieChart.update();
+
+		        }
+		    });
+
+		    $.ajax({
+		        type:'POST',
+		        url:'api/view.api.php?func=laporan-menu-grafik-pie',
+		        dataType: "json",
+            	data:{
+            		daterange:daterange,
+            		start:start,
+            		end:end,
+            		kategori:kategori,
+            		subkategori:subkategori,
+            		menu:menu,
+            		role:role,
+            		cabang:cabang,
+            		cekcabang:cekcabang,
+            		cabangnama:cabangnama,
+            		orderby: 'subkategori_id'
+            	},
+		        success:function(data){
+
+		            var n = 0;
+		            var nama = [];
+		            var jumlah = [];
+		            var background = [];
+		            var hover = [];
+		            var hoverBackgroundColor = ["#616774", "#FFC870", "#A8B3C5", "#5AD3D1", "#FF5A5E"];
+					var lengthcolor = hoverBackgroundColor.length;
+					var backgroundColor = ["#4D5360", "#FDB45C", "#949FB1", "#46BFBD", "#F7464A"];
+		            for (var i in data) {
+		            	if (n==lengthcolor) {
+		            		n = 0;
+		            	}
+		                nama.push(data[i].subkategori_nama);
+		                jumlah.push(data[i].jumlah);
+		                hover.push(hoverBackgroundColor[n]);
+		                background.push(backgroundColor[n]);
+
+		                n++;
+		            }
+		            $("#pieChartsubkategori").remove();
+		            $('#chart-pie-sub-box').append('<canvas id="pieChartsubkategori"><canvas>');
+			        var ctxB = document.getElementById("pieChartsubkategori").getContext('2d');
+					var myPieChart = new Chart(ctxB, {
+						type: 'pie',
+						data: {
+							labels: nama,
+							datasets: [{
+								label: '',
+								data: jumlah,
+								backgroundColor: background,
+								hoverBackgroundColor: hover
+							}]
+						},
+						options: {
+			                responsive: true,
+			                aspectRatio: 2,
+							scales: {
+								yAxes: [{
+									ticks: {
+										beginAtZero: true
+									}
+								}]
+							}
+						}
+					});
+					myPieChart.update();
+
+		        }
+		    });
+		});
+
+		$('.btn-proses-laporan-stok').on('click',function(){
+			var cekcabang = $('#defaultForm-cabang').val();
+			var cabangnama = $('#defaultForm-cabang option:selected').text();
+
+			$.ajax({
+		        type:'POST',
+		        url:'api/view.api.php?func=laporan-stok-cabang',
+		        dataType: "json",
+            	data:{
+            		cekcabang:cekcabang,
+            		cabangnama:cabangnama
+            	},
+		        success:function(data){
+		        	console.log(data);
+		        	$('#table-stok').DataTable().clear().destroy();
+		        	$('#table-stok').DataTable( {
+					    paging: false,
+					    searching: false,
+					    ordering: false,
+					    data: data,
+			            deferRender: true,
+					    columns: [
+					        { data: 'barang_nama' },
+					        { data: 'barang_cabang_stok' },
+					    ]
+					});
+		        	$("#namacabangstok").empty();
+		        	$("#namacabangstok").append(cabangnama);
+		        	
+		        }
+		    });			
 		});           
 	});
 

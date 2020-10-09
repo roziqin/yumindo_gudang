@@ -20,6 +20,9 @@
 					    <li class="nav-item">
 					      <a class="nav-link waves-light active show" id="omset">Omset</a>
 					    </li>
+					    <li class="nav-item">
+					      <a class="nav-link waves-light active show" id="stok">Stok</a>
+					    </li>
 
 		      		<?php } ?>
 		      		<!--
@@ -68,18 +71,10 @@
 				var menu = $(this).attr('id');
 				if(menu == "omset"){
 					$('.container__load').load('components/content/laporan.content.php?ket=omset');						
-				} else if(menu == "kasir"){
-					$('.container__load').load('components/content/laporan.content.php?ket=kasir');			
-				} else if(menu == "nota"){
-					$('.container__load').load('components/content/laporan.content.php?ket=nota');			
 				} else if(menu == "menu"){
 					$('.container__load').load('components/content/laporan.content.php?ket=menu');			
 				} else if(menu == "stok"){
 					$('.container__load').load('components/content/laporan.content.php?ket=stok');			
-				} else if(menu == "stokkeluar"){
-					$('.container__load').load('components/content/laporan.content.php?ket=stokkeluar');			
-				} else if(menu == "validasi"){
-					$('.container__load').load('components/content/laporan.content.php?ket=validasi');			
 				}
 			});
 	 

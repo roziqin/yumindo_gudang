@@ -8,5 +8,5 @@
 <link rel="stylesheet" type="text/css" href="../assets/css/compiled-4.8.8.min.css">
 <link rel="stylesheet" type="text/css" href="../assets/css/modules/animations-extended.min.css">
 <link rel="stylesheet" type="text/css" href="../assets/css/addons/datatables.min.css">
-<link rel="stylesheet" type="text/css" href="../assets/css/style.css?1">
+<link rel="stylesheet" type="text/css" href="../assets/css/style.css?1234">
 <link rel="stylesheet" type="text/css" href="../assets/css/bootstrap-datepicker3.css">

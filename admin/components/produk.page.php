@@ -10,7 +10,7 @@
 				      <a class="nav-link waves-light active show" id="listproduk">List Produk</a>
 				    </li>
 				    <li class="nav-item">
-				      <a class="nav-link waves-light" id="Kategori">Kategori</a>
+				      <a class="nav-link waves-light" id="kategori">Kategori</a>
 				    </li>
 				    <li class="nav-item">
 				      <a class="nav-link waves-light" id="subkategori">Sub Kategori</a>
@@ -43,8 +43,8 @@
 					$('.container__load').load('components/content/listproduk.content.php');						
 				}else if(menu == "subkategori"){
 					$('.container__load').load('components/content/subkategori.content.php');						
-				}else if(menu == "Kategori"){
-					$('.container__load').load('components/content/Kategori.content.php');						
+				}else if(menu == "kategori"){
+					$('.container__load').load('components/content/kategori.content.php');						
 				}
 			});
 	 

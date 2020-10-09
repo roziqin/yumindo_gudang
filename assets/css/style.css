@@ -535,8 +535,7 @@ main.transaksi {
 }
 
 .transaksi #listitem {
-	height: 35vh;
-    max-height: 38vh;
+	height: calc(100vh - 180px);
     overflow: auto;
 }
 .transaksi #listitem table {
