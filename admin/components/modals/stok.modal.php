@@ -20,6 +20,10 @@
               <input type="text" id="defaultForm-jumlah" class="form-control validate mb-3" name="ip-jumlah">
               <label for="defaultForm-jumlah">Jumlah</label>
             </div>
+            <div class="md-form mb-0" id="md-form-jumlahrevisi">
+              <input type="text" id="defaultForm-jumlahrevisi" class="form-control validate mb-3" name="ip-jumlahrevisi">
+              <label for="defaultForm-jumlahrevisi">Stok Terbaru</label>
+            </div>
             <div class="md-form" id="md-form-ket">
               <input type="text" id="defaultForm-ket" class="form-control validate mb-3" name="ip-ket">
               <label for="defaultForm-ket">Ket Dikurangi</label>
@@ -34,6 +38,7 @@
           <button class="btn btn-primary" id="update-stok" data-dismiss="modal" aria-label="Close" disabled="true">Proses</button>
           <button class="btn btn-primary hidden" id="updatebatas-stok" data-dismiss="modal" aria-label="Close">Proses</button>
           <button class="btn btn-primary" id="set-stok" data-dismiss="modal" aria-label="Close">Proses</button>
+          <button class="btn btn-primary" id="rev-stok" data-dismiss="modal" aria-label="Close">Proses</button>
         </div>
       </form>
     </div>
@@ -67,6 +72,7 @@
             $("#modalstok #defaultForm-nama").val('');
             $("#modalstok #defaultForm-jumlah").val('');
             $("#modalstok #defaultForm-ket").val('');
+            $("#modalstok #defaultForm-jumlahrevisi").val('');
           }
         });
       });
@@ -83,6 +89,7 @@
             $("#modalstok #defaultForm-nama").val('');
             $("#modalstok #defaultForm-jumlah").val('');
             $("#modalstok #defaultForm-ket").val('');
+            $("#modalstok #defaultForm-jumlahrevisi").val('');
           }
         });
       });
@@ -99,6 +106,7 @@
             $("#modalstok #defaultForm-nama").val('');
             $("#modalstok #defaultForm-jumlah").val('');
             $("#modalstok #defaultForm-ket").val('');
+            $("#modalstok #defaultForm-jumlahrevisi").val('');
           }
         });
       }); 
@@ -115,9 +123,28 @@
             $("#modalstok #defaultForm-nama").val('');
             $("#modalstok #defaultForm-jumlah").val('');
             $("#modalstok #defaultForm-ket").val('');
+            $("#modalstok #defaultForm-jumlahrevisi").val('');
           }
         });
       });
+      
+      $("#rev-stok").click(function(){
+        var data = $('#modalstok .form-stok').serialize();
+        $.ajax({
+          type: 'POST',
+          url: "controllers/stok.ctrl.php?ket=rev-stok",
+          data: data,
+          success: function() {
+            console.log("sukses edit")
+            $('#table-stok').DataTable().ajax.reload();
+            $("#modalstok #defaultForm-nama").val('');
+            $("#modalstok #defaultForm-jumlah").val('');
+            $("#modalstok #defaultForm-ket").val('');
+            $("#modalstok #defaultForm-jumlahrevisi").val('');
+          }
+        });
+      });
+
 
     });
   </script> 

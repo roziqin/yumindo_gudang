@@ -22,8 +22,9 @@ if($_GET['ket']=='submit-stok'){
 
 	$awal=$data['barang_stok'];
 	$jumlah = $_POST['ip-jumlah']+$awal;
+	$n = $_POST['ip-jumlah'];
 
-	$sql1 = "INSERT into log_stok(user,barang,stok_awal,stok_jumlah,tanggal,keterangan)values('$user','$id','$awal','$jumlah','$tgl','tambah')";
+	$sql1 = "INSERT into log_stok(user,barang,stok_awal,stok_akhir,stok_jumlah,tanggal,keterangan)values('$user','$id','$awal','$jumlah','$n','$tgl','tambah')";
 	mysqli_query($con,$sql1);
 
 	$sql2="UPDATE barang set barang_stok='$jumlah' where barang_id='$id'";
@@ -46,10 +47,11 @@ if($_GET['ket']=='submit-stok'){
 
 	$awal=$data['barang_stok'];
 	$jumlah = $awal-$_POST['ip-jumlah'];
+	$n = $_POST['ip-jumlah'];
 
-	if ($jumlah>0) {
+	if ($jumlah>=0) {
 
-		$sql1 = "INSERT into log_stok(user,barang,stok_awal,stok_jumlah,tanggal,alasan,keterangan)values('$user','$id','$awal','$jumlah','$tgl','$ket','kurang')";
+		$sql1 = "INSERT into log_stok(user,barang,stok_awal,stok_akhir,stok_jumlah,tanggal,alasan,keterangan)values('$user','$id','$awal','$jumlah','$n','$tgl','$ket','kurang')";
 		mysqli_query($con,$sql1);
 
 		$sql2="UPDATE barang set barang_stok='$jumlah' where barang_id='$id'";
@@ -91,6 +93,38 @@ if($_GET['ket']=='submit-stok'){
 
 	mysqli_query($con,$sql2);
 	
+} elseif($_GET['ket']=='rev-stok'){
+
+
+	$id = $_POST['ip-id'];
+
+	$sql="SELECT * from barang_cabang where barang_cabang_id='$id'";
+
+	$query=mysqli_query($con, $sql);
+	$data=mysqli_fetch_assoc($query);
+
+
+	$sql1="SELECT * from order_keluar where order_keluar_barang_id='$id' ORDER BY order_keluar_id DESC LIMIT 1";
+
+	$query1=mysqli_query($con, $sql1);
+	$data1=mysqli_fetch_assoc($query1);
+
+	$orderid = $data1["order_keluar_id"];
+
+	$awal = $data['barang_cabang_stok'];
+	$jumlah_keluar = $data1['order_keluar_jumlah'];
+
+	$jumlahrevisi = $_POST['ip-jumlahrevisi'];
+
+	$n = $awal + $jumlah_keluar;
+
+	$j = $n - $jumlahrevisi;
+	$sql3 = "UPDATE order_keluar set order_keluar_jumlah='$j' WHERE order_keluar_id='$orderid'";
+	mysqli_query($con,$sql3);
+
+	$sql4="UPDATE barang_cabang set barang_cabang_stok='$jumlahrevisi' where barang_cabang_id='$id'";
+	mysqli_query($con,$sql4);
+
 }
 
 ?>  

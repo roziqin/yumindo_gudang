@@ -50,13 +50,13 @@ if ($_GET['ket']=='produk') {
 		
 		$sql = mysqli_query($con, "SELECT barang_cabang_id FROM barang_cabang, barang, subkategori WHERE barang_cabang_barang_id=barang_id and barang_subkategori=subkategori_id and barang_cabang_cabang_id='$cabang'"); 
 		$sql_count = mysqli_num_rows($sql);
-		$query = "SELECT barang_nama, barang_cabang_stok as barang_stok, barang_cabang_batas_stok as barang_batas_stok, barang_cabang_id as barang_id, subkategori_nama FROM barang_cabang, barang, subkategori WHERE barang_cabang_barang_id=barang_id and barang_cabang_cabang_id='$cabang' and barang_subkategori=subkategori_id and (barang_nama LIKE '%".$search."%')";
+		$query = "SELECT barang_nama, barang_cabang_stok as barang_stok, barang_cabang_batas_stok as barang_batas_stok, barang_cabang_id as barang_id, subkategori_nama FROM barang_cabang, barang, subkategori WHERE barang_cabang_barang_id=barang_id and barang_cabang_cabang_id='$cabang' and barang_subkategori=subkategori_id and (barang_nama LIKE '%".$search."%' or barang_cabang_stok  LIKE '".$search."%')";
 
 	} else {
 
 		$sql = mysqli_query($con, "SELECT barang_id FROM barang, subkategori WHERE barang_subkategori=subkategori_id"); 
 		$sql_count = mysqli_num_rows($sql);
-		$query = "SELECT * FROM barang, subkategori where barang_subkategori=subkategori_id and (barang_nama LIKE '%".$search."%')";
+		$query = "SELECT * FROM barang, subkategori where barang_subkategori=subkategori_id and (barang_nama LIKE '%".$search."%'  or barang_stok  LIKE '".$search."%')";
 	}
 	
 } elseif ($_GET['ket']=='batasstok') {
