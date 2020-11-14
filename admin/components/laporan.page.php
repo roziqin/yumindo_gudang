@@ -12,6 +12,12 @@
 					    <li class="nav-item">
 					      <a class="nav-link waves-light active show" id="menu">Barang Terjual</a>
 					    </li>
+					    <li class="nav-item">
+					      <a class="nav-link waves-light active show" id="stokcabang">Stok</a>
+					    </li>
+					    <li class="nav-item">
+					      <a class="nav-link waves-light active show" id="logstok">Log Stok</a>
+					    </li>
 
 		      		<?php } else { ?>
 		      			<li class="nav-item">
@@ -75,6 +81,10 @@
 					$('.container__load').load('components/content/laporan.content.php?ket=menu');			
 				} else if(menu == "stok"){
 					$('.container__load').load('components/content/laporan.content.php?ket=stok');			
+				} else if(menu == "stokcabang"){
+					$('.container__load').load('components/content/laporan.content.php?ket=stokcabang');			
+				} else if(menu == "logstok"){
+					$('.container__load').load('components/content/laporan.content.php?ket=logstok');			
 				}
 			});
 	 

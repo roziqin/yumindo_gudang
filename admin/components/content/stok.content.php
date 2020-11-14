@@ -23,6 +23,7 @@ include '../modals/stok.modal.php'; ?>
         var role = $("#form-role").val();
 
         $('#table-stok').DataTable( {
+            "pageLength": 100,
             "processing": true,
             "serverSide": true,
             "ajax": 

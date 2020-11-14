@@ -5,6 +5,8 @@ $ket = $_GET['ket'];
 $role = $_SESSION['role'];
 $cabang = $_SESSION['cabang'];
 
+include '../modals/logstok.modal.php';
+
 if ($ket=='omset') {
 
 	$col = 'col-md-8';
@@ -397,7 +399,138 @@ if ($ket=='omset') {
 	</div>
 
 <?php
-} 
+}  elseif ($ket=='stokcabang') {
+
+	?>
+	<style type="text/css">
+		.select-wrapper.mdb-select.md-form {
+			visibility: hidden;
+			position: absolute;
+		}
+	</style>
+	<div class="row justify-content-md-center">
+		<div class="col-md-10">
+			<input type="hidden" id="defaultForm-nocabang" name="ip-nocabang" value="<?php echo $cabang;?>">
+	        <select class="mdb-select md-form" id="defaultForm-cabang" name="ip-cabang">
+            <?php
+            	$sql="SELECT * from cabang";
+              	$result=mysqli_query($con,$sql);
+              	while ($data1=mysqli_fetch_array($result,MYSQLI_ASSOC)) {
+              		if ($data1['cabang_nama']=='Pusat') {
+              			# code...
+              		} else {
+                      	echo "<option value='$data1[cabang_id]'>$data1[cabang_nama]</option>";
+                  	}
+              	}
+            ?>
+	        </select>
+			<div class="row fadeInLeft slow animated col-table">
+				<div class="col-md-12"><h2 class="text-center mb-4">Stok <span id="namacabangstok"></span> Hari ini</h2></div>
+				<div class="col-md-12">
+					<table id="table-stok" class="table table-striped table-bordered" style="width:100%">
+				        <thead>
+				            <tr>
+	                            <th>Nama Barang</th>
+	                            <th style="">Jumlah</th>
+				            </tr>
+				        </thead>
+				    </table>
+				</div>
+				<div class="col-md-12">
+				    <div class="md-form">
+				    	<a class="btn btn-default export-stokcabang hidden" href="" target="_blank">Export</a>
+				    </div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			var cekcabang0 = $('#defaultForm-nocabang').val();
+			var cekcabang = $('#defaultForm-cabang').val(cekcabang0);
+			var cabangnama = $('#defaultForm-cabang option:selected').text();
+
+			$.ajax({
+		        type:'POST',
+		        url:'api/view.api.php?func=laporan-stok-cabang',
+		        dataType: "json",
+            	data:{
+            		cekcabang:cekcabang0,
+            		cabangnama:cabangnama
+            	},
+		        success:function(data){
+		        	console.log(data);
+		        	
+		        	$('#table-stok').DataTable().clear().destroy();
+		        	$('#table-stok').DataTable( {
+					    paging: false,
+					    searching: true,
+					    ordering: true,
+					    data: data,
+			            deferRender: true,
+					    columns: [
+					        { data: 'barang_nama' },
+					        { data: 'barang_cabang_stok' },
+					    ]
+					});
+		        	$("a.export-stokcabang").removeClass("hidden");
+			        $("a.export-stokcabang").attr("href","export/export-laporan-stokcabang.php?cabang="+cekcabang0+"&cabangnama="+cabangnama);
+					
+		        	
+		        }
+		    });	
+		    	 
+		})
+	</script>
+<?php
+} elseif ($ket=='logstok') {
+
+	$col = 'col-md-8';
+	$btn = 'btn-proses-laporan-omset';
+	
+	?>
+	<input type="hidden" id="defaultForm-nocabang" name="ip-nocabang" value="<?php echo $cabang;?>">
+	<div class="row justify-content-md-center">
+		<div class="col-md-10">
+			<div class="row">
+				<div class="col-md-10">
+					<div class="row form-date">
+						<div class="col-md-6">
+				            <div class="md-form">
+							  	<input placeholder="Start date" type="text" id="defaultForm-startdate" class="form-control datepicker">
+				            </div>
+						</div>
+						<div class="col-md-6">
+				            <div class="md-form">
+							  	<input placeholder="End date" type="text" id="defaultForm-enddate" class="form-control datepicker">
+				            </div>
+				        </div>
+					</div>
+				</div>
+				<div class="col-md-2">
+				    <div class="md-form">
+				    	<button class="btn btn-primary btn-proses-logstok">Proses</button>
+				    </div>
+				</div>
+			</div>	
+			<div class="row fadeInLeft slow animated col-table">
+				<div class="col-md-12"><h2 class="text-center mb-4">Log Stok</h2></div>
+				<div class="col-md-12">
+					<table id="table-logstok" class="table table-striped table-bordered" style="width:100%">
+				        <thead>
+				            <tr>
+	                            <th>Tanggal</th>
+	                            <th style=""></th>
+				            </tr>
+				        </thead>
+				    </table>
+				</div>
+			</div>
+		</div>
+	</div>
+
+<?php
+}
 
 ?>
 <script type="text/javascript">
@@ -781,7 +914,7 @@ if ($ket=='omset') {
 		        	console.log("success "+kettext);
 		        	console.log(data);
 		        	$("a.export-stok").removeClass("hidden");
-			        $("a.export-stok").attr("href","export/export-laporan-stok.php?date="+date+"&daterange="+daterange+"&kategori="+kategori+"&subkategori="+subkategori+"&menu="+menu+"&role="+role+"&cabang="+cabang+"&cekcabang="+cekcabang+"&cabangnama="+cabangnama);
+			        $("a.export-stok").attr("href","export/export-laporan-keluar.php?date="+date+"&daterange="+daterange+"&kategori="+kategori+"&subkategori="+subkategori+"&menu="+menu+"&role="+role+"&cabang="+cabang+"&cekcabang="+cekcabang+"&cabangnama="+cabangnama);
 		        }
 		    });
 
@@ -1046,7 +1179,72 @@ if ($ket=='omset') {
 		        	
 		        }
 		    });			
-		});           
+		});  
+
+		$('.btn-proses-logstok').on('click',function(){
+			var daterange = $('#daterange').val();
+			var cekcabang = $('#defaultForm-nocabang').val();
+
+          	var start = $('#defaultForm-startdate').val();
+          	var end = $('#defaultForm-enddate').val();				
+			
+			var date = start+":"+end;
+
+			$.ajax({
+		        type:'POST',
+		        url:'api/view.api.php?func=laporan-logstok',
+		        dataType: "json",
+            	data:{
+            		cekcabang:cekcabang,
+            		start:start,
+            		end:end
+            	},
+		        success:function(data){
+
+		        	console.log(data);
+		        	$('#table-logstok').DataTable().clear().destroy();
+		        	$('#table-logstok').DataTable( {
+					    paging: false,
+					    searching: true,
+					    ordering: true,
+					    data: data,
+			            deferRender: true,
+					    columns: [
+					        { data: 'log_stok_hariini_tanggal' },
+					        { width: "150px", "render": function(data, type, full){
+			                   return '<a class="btn-floating btn-sm btn-default mr-2 btn-detail" data-toggle="modal" data-target="#modallogstok" data-id="' + full['log_stok_hariini_id'] + '" title="Detail"><i class="fas fa-pen"></i></a>';
+			                  }
+			                },
+					    ],
+			            drawCallback: function( settings ) {
+			              $('.btn-detail').on('click',function(){
+			                  var logid = $(this).data('id');
+			                  console.log(logid);
+			                  $('#listbarang tbody').empty();
+			                  $.ajax({
+			                      type:'POST',
+			                      url:'api/view.api.php?func=detaillogstok',
+			                      dataType: "json",
+			                      data:{logid:logid},
+			                      success:function(data){
+			                        console.log(data);
+									$('#modallogstok .modal-body').empty();
+									$('#modallogstok .modal-body').append(data[0].log_stok_hariini_text);
+									$("a.btn-export").attr("href","export/export-laporan-logstok.php?id="+logid);
+
+			                      }
+			                  });
+			              });
+			              
+			            }
+					});
+		        	
+
+		        }
+		    });
+
+		});
+
 	});
 
 

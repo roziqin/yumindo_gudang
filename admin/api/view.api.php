@@ -97,7 +97,23 @@ if ($func=='dasboard-omset') {
     
     $cekcabang = $_POST['cekcabang'];
     
-    $query="SELECT * from barang, barang_cabang where barang_cabang_barang_id=barang_id and barang_cabang_cabang_id='$cekcabang'";
+    $query="SELECT * from barang, barang_cabang where barang_cabang_barang_id=barang_id and barang_cabang_cabang_id='$cekcabang' ORDER BY barang_nama ASC ";
+
+} elseif ($func=='laporan-logstok') {
+   
+    $cekcabang = $_POST['cekcabang'];
+    $tgl11 = date("Y-m-j", strtotime($_POST['start']));
+    $tgl22 = date("Y-m-j", strtotime($_POST['end']));
+   
+    $query ="SELECT * from log_stok_hariini WHERE log_stok_hariini_cabang='$cekcabang' and log_stok_hariini_tanggal BETWEEN '$tgl11' AND '$tgl22'";
+   
+
+} elseif ($func=='detaillogstok') {
+   
+    $logid = $_POST['logid'];
+   
+    $query ="SELECT * from log_stok_hariini WHERE log_stok_hariini_id='$logid'";
+   
 
 } elseif ($func=='laporan-omset') {
 	

@@ -40,7 +40,7 @@ if ($role=="md") {
     }
 
 
-    $query ="SELECT order_keluar_tanggal, order_keluar_bulan, barang_nama, barang_id, sum(order_keluar_jumlah) as jumlah from order_keluar, barang, barang_cabang, kategori, subkategori WHERE order_keluar_barang_id=barang_cabang_id and barang_id=barang_cabang_barang_id and kategori_id=subkategori_parent and subkategori_id=barang_subkategori and barang_cabang_cabang_id='$cabang' and $text1 $ket BETWEEN '$tgl11' AND '$tgl22' GROUP BY $ket $text2 ORDER BY order_keluar_tanggal ASC";
+    $query ="SELECT kategori_nama, subkategori_nama, order_keluar_tanggal, order_keluar_bulan, barang_nama, barang_id, sum(order_keluar_jumlah) as jumlah from order_keluar, barang, barang_cabang, kategori, subkategori WHERE order_keluar_barang_id=barang_cabang_id and barang_id=barang_cabang_barang_id and kategori_id=subkategori_parent and subkategori_id=barang_subkategori and barang_cabang_cabang_id='$cabang' and $text1 $ket BETWEEN '$tgl11' AND '$tgl22' GROUP BY $ket $text2 ORDER BY order_keluar_tanggal, barang_nama ASC";
 
 } elseif ($role=="admin" || $role=="administrator"  || $role=="keuangan") {
     if ($cabangnama=="Pusat") {    
@@ -65,7 +65,7 @@ if ($role=="md") {
             $ket = "orderbarang_bulan";
         }
         
-        $query ="SELECT orderbarang_tanggal, orderbarang_bulan, barang_nama, barang_id, sum(order_detail_jumlah) as jumlah from orderbarang, order_detail, barang, kategori, subkategori WHERE order_detail_barang_id=barang_id and order_detail_no_pesan=orderbarang_no_pesan and kategori_id=subkategori_parent and subkategori_id=barang_subkategori and $text1 $ket BETWEEN '$tgl11' AND '$tgl22' GROUP BY $ket $text2 ORDER BY orderbarang_tanggal ASC";
+        $query ="SELECT kategori_nama, subkategori_nama, orderbarang_tanggal, orderbarang_bulan, barang_nama, barang_id, sum(order_detail_jumlah) as jumlah from orderbarang, order_detail, barang, kategori, subkategori WHERE order_detail_barang_id=barang_id and order_detail_no_pesan=orderbarang_no_pesan and kategori_id=subkategori_parent and subkategori_id=barang_subkategori and $text1 $ket BETWEEN '$tgl11' AND '$tgl22' GROUP BY $ket $text2 ORDER BY orderbarang_tanggal, barang_nama ASC";
     } else {
         if ($kategori!=0 && $subkategori==0 && $menu==0) {
             $text1 = 'kategori_id='.$kategori.' and ';
@@ -89,7 +89,7 @@ if ($role=="md") {
         }
 
 
-        $query ="SELECT order_keluar_tanggal as orderbarang_tanggal, order_keluar_bulan as orderbarang_bulan, barang_nama, barang_id, sum(order_keluar_jumlah) as jumlah from order_keluar, barang, barang_cabang, kategori, subkategori WHERE order_keluar_barang_id=barang_cabang_id and barang_id=barang_cabang_barang_id and kategori_id=subkategori_parent and subkategori_id=barang_subkategori and barang_cabang_cabang_id='$cekcabang' and $text1 $ket BETWEEN '$tgl11' AND '$tgl22' GROUP BY $ket $text2 ORDER BY order_keluar_tanggal ASC";
+        $query ="SELECT kategori_nama, subkategori_nama, order_keluar_tanggal as orderbarang_tanggal, order_keluar_bulan as orderbarang_bulan, barang_nama, barang_id, sum(order_keluar_jumlah) as jumlah from order_keluar, barang, barang_cabang, kategori, subkategori WHERE order_keluar_barang_id=barang_cabang_id and barang_id=barang_cabang_barang_id and kategori_id=subkategori_parent and subkategori_id=barang_subkategori and barang_cabang_cabang_id='$cekcabang' and $text1 $ket BETWEEN '$tgl11' AND '$tgl22' GROUP BY $ket $text2 ORDER BY orderbarang_tanggal, barang_nama ASC";
     }
 
 }
@@ -117,20 +117,24 @@ $html ='
 		<tr>
             <th>tanggal</th>
             <th>item</th>
+            <th>kategori</th>
+            <th>subkategori</th>
             <th>jumlah</th>
 		</tr>
 
 ';
 while($data = mysqli_fetch_assoc($result)) {
 	if ($_GET['daterange']=="harian") {
-        $fieldname = $data["orderbarang_tanggal"];
+        $fieldname = $data["order_keluar_tanggal"];
     } elseif ($_GET['daterange']=="bulanan") {
-        $fieldname = $data["orderbarang_bulan"];
+        $fieldname = $data["order_keluar_bulan"];
     }
 	$html.='
 		<tr>
 			<td>'.$fieldname.'</td>
 			<td>'.$data["barang_nama"].'</td>
+            <td>'.$data["kategori_nama"].'</td>
+            <td>'.$data["subkategori_nama"].'</td>
 			<td style="text-align: center;">'.$data["jumlah"].'</td>
 		</tr>
 
@@ -141,30 +145,11 @@ $html .='
 	</table>
 ';
 
+$filename = "laporan_barang_keluar".$tgl.".xls";
+header("Content-type: application/vnd-ms-excel");
+header("Content-Disposition: attachment; filename=".$filename);
 
-require_once '../../include/dompdf/lib/html5lib/Parser.php';
-require_once '../../include/dompdf/lib/php-font-lib/src/FontLib/Autoloader.php';
-require_once '../../include/dompdf/lib/php-svg-lib/src/autoload.php';
-require_once '../../include/dompdf/src/Autoloader.php';
-Dompdf\Autoloader::register();
-
-
-// reference the Dompdf namespace
-use Dompdf\Dompdf;
-
-// instantiate and use the dompdf class
-$dompdf = new Dompdf();
-$dompdf->loadHtml($html);
-
-// (Optional) Setup the paper size and orientation
-$dompdf->setPaper('A4', 'potrait');
-
-// Render the HTML as PDF
-$dompdf->render();
-
-// Output the generated PDF to Browser
-$dompdf->stream("exportstok-".$tgl.".pdf", array("Attachment"=>0));
-
+echo $html;
 ?>
 
 <script type="text/javascript">
