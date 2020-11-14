@@ -10,6 +10,7 @@ include '../modals/stok.modal.php'; ?>
                 <th>subkategori</th>
                 <th>stok</th>
                 <th>batas stok</th>
+                <th>foto</th>
                 <th></th>
             </tr>
         </thead>
@@ -37,6 +38,20 @@ include '../modals/stok.modal.php'; ?>
                 { "data": "subkategori_nama" },
                 { "data": "barang_stok" },
                 { "data": "barang_batas_stok" },
+                { "width": "240px", "render": function(data, type, full){
+                    var n = "";
+                    if(full['barang_image_1']!="") {
+                      n = '<a href="../assets/img/'+full['barang_image_1']+'" target="_blank"><img src="../assets/img/'+full['barang_image_1']+'" width="70" style="margin-right: 3px;"></a>';
+                    }
+                    if(full['barang_image_2']!="") {
+                      n = n + '<a href="../assets/img/'+full['barang_image_2']+'" target="_blank"><img src="../assets/img/'+full['barang_image_2']+'" width="70" style="margin-right: 3px;"></a>';
+                    }
+                    if(full['barang_image_3']!="") {
+                      n = n + '<a href="../assets/img/'+full['barang_image_3']+'" target="_blank"><img src="../assets/img/'+full['barang_image_3']+'" width="70"></a>';
+                    } 
+                   return n;
+                  }
+                },
                 { "width": "220px", "render": function(data, type, full){
                     if (role=="md") {
                         return '<a class="btn-floating btn-sm btn-warning mr-2 btn-setstok" data-toggle="modal" data-target="#modalstok" data-id="' + full['barang_id'] + '" title="Set Stok"><i class="fas fa-clipboard-list"></i></a><a class="btn-floating btn-sm btn-danger mr-2 btn-revisi" data-toggle="modal" data-target="#modalstok" data-id="' + full['barang_id'] + '" title="Revisi Stok"><i class="fas fa-clipboard-list"></i></a><a class="btn-floating btn-sm btn-default mr-2 btn-batas" data-toggle="modal" data-target="#modalstok" data-id="' + full['barang_id'] + '" title="Set Batas Stok"><i class="fas fa-pen"></i></a>';

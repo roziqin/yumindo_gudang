@@ -489,11 +489,28 @@ if ($ket=='omset') {
 	$btn = 'btn-proses-laporan-omset';
 	
 	?>
-	<input type="hidden" id="defaultForm-nocabang" name="ip-nocabang" value="<?php echo $cabang;?>">
 	<div class="row justify-content-md-center">
 		<div class="col-md-10">
 			<div class="row">
-				<div class="col-md-10">
+                
+                <?php if ($role!="md") { ?>
+				<div class="col-md-2">
+				    <div class="md-form">
+				        <select class="mdb-select md-form" id="defaultForm-nocabang" name="ip-nocabang">
+		                <?php
+		                	$sql="SELECT * from cabang";
+		                  	$result=mysqli_query($con,$sql);
+		                  	while ($data1=mysqli_fetch_array($result,MYSQLI_ASSOC)) {
+		                      	echo "<option value='$data1[cabang_id]'>$data1[cabang_nama]</option>";
+		                  	}
+		                ?>
+				        </select>
+				    </div>
+				</div>
+                <?php } else { ?>
+					<input type="hidden" id="defaultForm-nocabang" name="ip-nocabang" value="<?php echo $cabang;?>">
+                <?php } ?>
+				<div class="col-md-8">
 					<div class="row form-date">
 						<div class="col-md-6">
 				            <div class="md-form">
@@ -1182,7 +1199,6 @@ if ($ket=='omset') {
 		});  
 
 		$('.btn-proses-logstok').on('click',function(){
-			var daterange = $('#daterange').val();
 			var cekcabang = $('#defaultForm-nocabang').val();
 
           	var start = $('#defaultForm-startdate').val();

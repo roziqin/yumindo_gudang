@@ -15,9 +15,6 @@
 					    <li class="nav-item">
 					      <a class="nav-link waves-light active show" id="stokcabang">Stok</a>
 					    </li>
-					    <li class="nav-item">
-					      <a class="nav-link waves-light active show" id="logstok">Log Stok</a>
-					    </li>
 
 		      		<?php } else { ?>
 		      			<li class="nav-item">
@@ -31,6 +28,9 @@
 					    </li>
 
 		      		<?php } ?>
+				    <li class="nav-item">
+				      <a class="nav-link waves-light active show" id="logstok">Log Stok</a>
+				    </li>
 		      		<!--
 				    <li class="nav-item">
 				      <a class="nav-link waves-light" id="kasir">Kasir</a>

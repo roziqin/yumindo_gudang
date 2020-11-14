@@ -5,7 +5,10 @@ date_default_timezone_set('Asia/jakarta');
 $tgl=date('Y-m-j');
 
 $cekcabang = $_GET['cabang'];
-    
+$sqlcabang="SELECT * from cabang where cabang_id='$cekcabang'";
+$querycabang=mysqli_query($con,$sqlcabang);
+$datacabang=mysqli_fetch_assoc($querycabang);
+$namacabang = $datacabang["cabang_nama"];
 $query="SELECT * from barang, kategori, subkategori, barang_cabang where barang_cabang_barang_id=barang_id and kategori_id=subkategori_parent and subkategori_id=barang_subkategori and barang_cabang_cabang_id='$cekcabang' ORDER BY barang_nama ASC";
 
 $result = mysqli_query($con,$query);
@@ -25,7 +28,7 @@ $html ='
 	}
 </style>
 	<center>
-		<h1>Stok Hari Ini</h1>
+		<h1>Stok Hari Ini '.$namacabang.'</h1>
 	</center>
     <center>
         <h4>'.$tgl.'</h4>
@@ -57,7 +60,7 @@ $html .='
 $sql1 = "INSERT into log_stok_hariini (log_stok_hariini_tanggal,log_stok_hariini_cabang,log_stok_hariini_text)values('$tgl','$cekcabang','$html')";
     mysqli_query($con,$sql1);
 
-$filename = "laporan_stok_".$tgl.".xls";
+$filename = "laporan_stok_".$namacabang."--".$tgl.".xls";
 header("Content-type: application/vnd-ms-excel");
 header("Content-Disposition: attachment; filename=".$filename);
 
